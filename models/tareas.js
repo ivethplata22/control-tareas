@@ -30,10 +30,29 @@ class Tareas {
     listadoCompleto() {
         console.log();
         this.listadoArr.forEach((tarea, index) => {
-            const idx = `${index+1}`.green;
+            const idx = `${index+1}.`.green;
             const { desc, completadoEn } = tarea;
             const estado = (completadoEn) ? 'Completada'.green : 'Pendiente'.red;
             console.log(`${idx} ${desc} ${'::'.yellow} ${estado}`);
+        });
+    }
+
+    listarPendientesCompletadas(completadas = true) {
+        console.log();
+        let i = 0;
+        this.listadoArr.forEach( tarea => {
+            const { desc, completadoEn } = tarea;
+            if (completadas) {
+                if(completadoEn) {
+                    i += 1;
+                    console.log(`${`${i.toString()}.`.green} ${desc} ${'::'.yellow} ${'Completada'.green}`)
+                }
+            } else {
+                if (!completadoEn) {
+                    i += 1;
+                    console.log(`${`${i.toString()}.`.green} ${desc} ${'::'.yellow} ${'Pendiente'.red}`)
+                }
+            }
         });
     }
 }
