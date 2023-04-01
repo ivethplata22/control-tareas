@@ -10,14 +10,24 @@ const main = async() => {
         opt = await inquirerMenu();
         
         switch (opt) {
+            case '0':
+                // Salir
+                console.log('\nAdios :D'.yellow);
+            break;
             case '1':
                 // Crear Tarea
                 const desc = await leerInput('Descripción de la tarea: ');
-                tareas.crearTarea(desc);
+                console.log('\n');
+                if(desc != 'salir') {
+                    tareas.crearTarea(desc);
+                    console.log('Tarea Creada Con Exito'.yellow);
+                } else {
+                    console.log('Se anulo la creación de la tarea'.red);
+                }
             break;
             case '2':
                 // Listar Tareas
-                console.log(tareas._listado);
+                console.log(tareas.listadoArr);
             break;
             case '3':
                 // Listar Tareas Completadas
@@ -31,12 +41,10 @@ const main = async() => {
             case '6':
                 // Borrar Tarea
             break;
-            default:
-
-            break;
         }
 
         await pausa();
+        console.clear();
     } while (opt !== '0');
 }
 
