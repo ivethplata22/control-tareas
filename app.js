@@ -1,5 +1,5 @@
 require('colors');
-const { inquirerMenu, pausa, leerInput, listadoTareasBorrar, confirmar } = require('./helpers/inquirer');
+const { inquirerMenu, pausa, leerInput, listadoTareasBorrar, confirmar, mostrarListadoChecklist } = require('./helpers/inquirer');
 const Tareas = require('./models/tareas');
 const { guardarInfo, leerInfo } = require('./helpers/guardarArchivo');
 
@@ -15,12 +15,16 @@ const main = async() => {
         switch (opt) {
             case '0':
                 // Salir
-                console.log('\nAdios :D'.yellow);
+                const ok = await confirmar('¿Estas seguro?');
+                if(ok)
+                    console.log('\nAdios :D'.yellow);
+                else
+                    opt = '7';
             break;
             case '1':
                 // Crear Tarea
                 const desc = await leerInput('Descripción de la tarea: ');
-                console.log('\n');
+                console.log('');
                 if(desc != 'salir') {
                     tareas.crearTarea(desc);
                     console.log('Tarea Creada Con Exito'.yellow);
@@ -42,14 +46,21 @@ const main = async() => {
             break;
             case '5':
                 // Completas Tarea(s)
+                const ids = await mostrarListadoChecklist(tareas.listadoArr);
+                tareas.toggleCompletadas(ids);
+                console.log('\nTareas Actualizadas'.green);
             break;
             case '6':
                 // Borrar Tarea
                 const id = await listadoTareasBorrar(tareas.listadoArr);
-                const ok = await confirmar('¿Estas seguro?');
-                if(ok) {
-                    tareas.borrarTarea(id);
-                    console.log('\nTarea Borrada Con Exito'.green);
+                if(id != '0') {
+                    const ok = await confirmar('¿Estas seguro?');
+                    if(ok) {
+                        tareas.borrarTarea(id);
+                        console.log('\nTarea Borrada Con Exito'.green);
+                    } else {
+                        console.log('\nSe anulo la acción'.red);
+                    }   
                 } else {
                     console.log('\nSe anulo la acción'.red);
                 }
